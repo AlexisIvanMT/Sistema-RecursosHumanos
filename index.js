@@ -1,24 +1,25 @@
+//Dependencies
 const morgan = require('morgan')
 const express = require('express');
 const app = express();
+//Routers
 const employee = require('./routes/employee');
-const user = require('./routes/user')
+const user = require('./routes/user');
+//middleware
+const auth = require('./middleware/auth');
+const notFound = require('./middleware/notFound');
+const welcom = require('./middleware/welcom');
 
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res,next) => {
-    return res.status(200).json({code: 1, message: "Bienvenido al servidor"});
-});
-
-//La peticiones se dirigen al archivo employee
-app.use("/employee",employee);
+app.get("/", welcom);
 app.use("/user", user);
-
-app.use((req, res, next) => {
-    return res.status(404).json({code: '404',message: "URL no encontrado"});
-})
+app.use(auth);
+//La peticiones se dirigen al archivo employee
+app.use("/employee", employee);
+app.use(notFound);
 
 
 app.listen(process.env.PORT || 3000,() =>{

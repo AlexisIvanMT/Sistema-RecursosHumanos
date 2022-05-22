@@ -49,7 +49,7 @@ employee.post("/", async (req, res, next) => {
     return res.status(500).json({ code: 500, message: "Campos incompletos" });
   });
 
-employee.get("/", async (req, res, next) => {
+employee.get('/', async (req, res, next) => {
     const empl = await db.query("SELECT * FROM employee");
     return res.status(200).json({ code: 200, message: empl });
   });
